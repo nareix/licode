@@ -10,6 +10,7 @@
 #include "ExternalOutput.h"
 #include "ThreadPool.h"
 #include "IOThreadPool.h"
+#include "CxxLogger.h"
 
 NAN_MODULE_INIT(InitAll) {
   WebRtcConnection::Init(target);
@@ -19,6 +20,7 @@ NAN_MODULE_INIT(InitAll) {
   SyntheticInput::Init(target);
   ThreadPool::Init(target);
   IOThreadPool::Init(target);
+  CxxLogger::Init(target);
 }
 
 NODE_MODULE(addon, InitAll)
