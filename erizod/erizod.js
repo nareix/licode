@@ -1,4 +1,4 @@
-const addon = require('../erizoAPI/build/Release/addon.node');
+const addon = require('./lib/addon.node');
 
 class Logger {
     constructor(name) {
