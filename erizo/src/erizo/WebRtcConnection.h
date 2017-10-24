@@ -176,7 +176,7 @@ class WebRtcConnection: public MediaSink, public MediaSource, public FeedbackSin
   bool isSinkSSRC(uint32_t ssrc);
 
   inline const char* toLog() {
-    return ("id: " + connection_id_ + ", " + printLogContext()).c_str();
+    return connection_id_.c_str();
   }
 
  private:
