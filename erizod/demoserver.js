@@ -21,13 +21,14 @@ wss.on('connection', function connection(ws, req) {
     switch (j.type) {
       case 'offer':
         if (conn == null) {
-          conn = erizod.request(j);
+          conn = erizod.request();
           conn.sendCandidate = (e) => {
             sendmessage({ type: 'candidate', candidate: e });
           };
           conn.sendSDP = (e) => {
             sendmessage({ type: 'sdp', sdp: e });
           };
+          conn.setSdp(j.sdp);
         }
         break;
       case 'candidate':

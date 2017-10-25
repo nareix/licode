@@ -19,3 +19,6 @@ spine/erizofc.js
 spine/testResult.json
 extras/basic_example/public/assets/
 rtp_media_config.js
+erizod/bin
+erizod/lib
+erizod/erizod-bundle-mac.tar
