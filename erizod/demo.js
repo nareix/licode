@@ -3,7 +3,7 @@ var socket = new WebSocket('ws://localhost:8081');
 
 let main = (conn) => {
     let config = {
-        iceServers: [{ 'url': 'stun:webrtc.qiniuapi.com:3478' }],
+        iceServers: [{"urls":"stun:webrtc.qiniuapi.com:3478"},{"urls":"turn:webrtc.qiniuapi.com:3478","username":"ninefingers","credential":"youhavetoberealistic"}],
         iceTransportPolicy: 'all',
         rtcpMuxPolicy: 'require',
         iceCandidatePoolSize: 0,

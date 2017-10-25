@@ -8,7 +8,7 @@ class Logger {
         let args_ = args.map(x => {
             if (x == null)
                 return 'null';
-            if (typeof(x) == 'object') 
+            if (typeof(x) == 'object')
                 return JSON.stringify(x);
             return x;
         });
@@ -85,7 +85,7 @@ var
     WARN_PRECOND_FAILED = 412,
     WARN_BAD_CONNECTION = 502;
 
-exports.request = (j) => {
+exports.request = () => {
     let pcid = 'newconn' + Date.now();
     let conn = {};
     let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
@@ -103,7 +103,7 @@ exports.request = (j) => {
         '' //networkinterface
     );
     let onevent = (e, msg) => {
-        //log.info('stat', e, msg);
+        log.info('stat', e, msg);
         switch (e) {
             case CONN_CANDIDATE:
                 let j = JSON.parse(msg);
@@ -116,20 +116,16 @@ exports.request = (j) => {
         log.info('initFailed');
     }
 
-    if (!pc.createOffer(true, true, false)) {
-        log.info('createOfferFailed');
-    }
-
     conn.addCandidate = (e) => {
         log.info('addCandidate', e);
         pc.addRemoteCandidate(e.sdpMid, e.sdpMLineIndex, 'a='+e.candidate);
     };
 
-    /*
-    if (!wrtc.setRemoteSdp(j.sdp)) {
-        log.info('setRemoteSdpFailed');        
-    }
-    */
+    conn.setSdp = (e) => {
+        log.info('setSdp', e);
+        pc.setRemoteSdp(e);
+        conn.sendSDP(pc.getLocalSdp())
+    };
 
     return conn;
 };
