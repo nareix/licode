@@ -48,6 +48,7 @@ let main = (conn) => {
         audio: true,
         video: true
     }).then((stream) => {
+        document.getElementById("my_local_video").srcObject = stream;
         pc.addStream(stream);
         return pc.createOffer({ offerToReceiveAudio: 0, offerToReceiveVideo: 0 });
     }).then((desc) => {

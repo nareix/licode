@@ -23,7 +23,7 @@ let threadPool = new addon.ThreadPool(24);
 threadPool.start();
 
 let ioThreadPool = new addon.IOThreadPool(1);
-ioThreadPool.start();
+// ioThreadPool.start();
 
 let mediaConfig = {};
 
@@ -95,7 +95,7 @@ exports.request = () => {
         maxport,
         true,//trickle
         JSON.stringify(mediaConfig),
-        true, //useNicer,
+        false, //useNicer,
         '', //turnserver
         0, //turnport
         '', //turnusername,
