@@ -8,7 +8,7 @@ class Logger {
         let args_ = args.map(x => {
             if (x == null)
                 return 'null';
-            if (typeof(x) == 'object')
+            if (typeof (x) == 'object')
                 return JSON.stringify(x);
             return x;
         });
@@ -85,15 +85,18 @@ var
     WARN_PRECOND_FAILED = 412,
     WARN_BAD_CONNECTION = 502;
 
-exports.request = () => {
-    let pcid = 'newconn' + Date.now();
+
+var muxer =null;
+exports.publish = () => {
+    // let pcid = 'newconn' + Date.now();
+    let pcid = '1234';
     let conn = {};
     let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
         stunserver,
         stunport,
         minport,
         maxport,
-        true,//trickle
+        true, //trickle
         JSON.stringify(mediaConfig),
         false, //useNicer,
         '', //turnserver
@@ -102,6 +105,11 @@ exports.request = () => {
         '', //turnpass,
         '' //networkinterface
     );
+    muxer = new addon.OneToManyProcessor();
+    pc.setAudioReceiver(muxer);
+    pc.setVideoReceiver(muxer);
+    muxer.setPublisher(pc);
+
     let onevent = (e, msg) => {
         log.info('stat', e, msg);
         switch (e) {
@@ -109,6 +117,11 @@ exports.request = () => {
                 let j = JSON.parse(msg);
                 j.candidate = j.candidate.substr(2);
                 conn.sendCandidate(j);
+                break;
+            case CONN_READY:
+                log.info('pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok');
+                conn.sendPublishOK();
+                break
         }
     };
 
@@ -118,7 +131,7 @@ exports.request = () => {
 
     conn.addCandidate = (e) => {
         log.info('addCandidate', e);
-        pc.addRemoteCandidate(e.sdpMid, e.sdpMLineIndex, 'a='+e.candidate);
+        pc.addRemoteCandidate(e.sdpMid, e.sdpMLineIndex, 'a=' + e.candidate);
     };
 
     conn.setSdp = (e) => {
@@ -130,3 +143,58 @@ exports.request = () => {
     return conn;
 };
 
+
+exports.subscribe = () => {
+    // let pcid = 'newconn' + Date.now();
+    let pcid = '5678';
+    let conn = {};
+    let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
+        stunserver,
+        stunport,
+        minport,
+        maxport,
+        true, //trickle
+        JSON.stringify(mediaConfig),
+        false, //useNicer,
+        '', //turnserver
+        0, //turnport
+        '', //turnusername,
+        '', //turnpass,
+        '' //networkinterface
+    );
+
+    muxer.addSubscriber(pc, "1234");
+
+    let onevent = (e, msg) => {
+        log.info('stat', e, msg);
+        switch (e) {
+            case CONN_CANDIDATE:
+                let j = JSON.parse(msg);
+                j.candidate = j.candidate.substr(2);
+                conn.sendCandidate(j);
+                break;
+            case CONN_READY:
+                log.info('pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok');
+                conn.sendSubscribeOK();
+                pc.generatePLIPacket();
+                break
+        }
+    };
+
+    if (!pc.init(onevent)) {
+        log.info('initFailed');
+    }
+
+    conn.addCandidate = (e) => {
+        log.info('addCandidate', e);
+        pc.addRemoteCandidate(e.sdpMid, e.sdpMLineIndex, 'a=' + e.candidate);
+    };
+
+    conn.setSdp = (e) => {
+        log.info('setSdp', e);
+        pc.setRemoteSdp(e);
+        conn.sendSDP(pc.getLocalSdp())
+    };
+
+    return conn;
+};
