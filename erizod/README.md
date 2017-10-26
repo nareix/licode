@@ -2,23 +2,28 @@
 
 ## 环境搭建
 
+```
 git clone git@github.com:nareix/licode.git
-
 cd licode/erizod
-
-wget http://woyao.qiniucdn.com/erizod-bundle-mac.tar
-
-tar xf erizod-bundle-mac.tar
+# OS X
+curl http://woyao.qiniucdn.com/erizod-bundle-mac.tar | tar xf -
+# Linux
+wget http://woyao.qiniucdn.com/erizod-linux64-bundle.tar | tar xf -
+```
 
 ## demo 连通性测试
 
+```
 ./bin/node demoserver.js
+```
 
 访问 http://localhost:8081/demo.html
 
-## demo1 单人发布订阅测试
+## demo1 单人发布订阅测试
 
+```
 ./bin/node demoserver1.js
+```
 
 访问 http://localhost:8081/demo1.html
 
