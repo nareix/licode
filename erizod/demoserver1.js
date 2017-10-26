@@ -75,7 +75,6 @@ wss.on('connection', function connection(ws, req) {
                 });
               };
               conn1.sendSubscribeOK = () => {
-                console.log("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
                 sendmessage({
                   option: 'subscribeok'
                 });
