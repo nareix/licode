@@ -2,13 +2,13 @@
 
 ## 环境搭建
 
-```
+```bash
 git clone git@github.com:nareix/licode.git
 cd licode/erizod
 # OS X
 curl http://woyao.qiniucdn.com/erizod-bundle-mac.tar | tar xf -
 # Linux
-wget http://woyao.qiniucdn.com/erizod-linux64-bundle.tar | tar xf -
+curl http://woyao.qiniucdn.com/erizod-linux64-bundle.tar | tar xf -
 ```
 
 ## demo 连通性测试
