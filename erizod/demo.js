@@ -3,7 +3,7 @@ var socket = new WebSocket('ws://localhost:8081');
 
 let main = (conn) => {
     let config = {
-        iceServers: [{"urls":"stun:webrtc.qiniuapi.com:3478"},{"urls":"turn:webrtc.qiniuapi.com:3478","username":"ninefingers","credential":"youhavetoberealistic"}],
+        iceServers: [{"urls":"stun:webrtc.qiniuapi.com:3478"}],
         iceTransportPolicy: 'all',
         rtcpMuxPolicy: 'require',
         iceCandidatePoolSize: 0,
@@ -48,7 +48,6 @@ let main = (conn) => {
         audio: true,
         video: true
     }).then((stream) => {
-        document.getElementById("my_local_video").srcObject = stream;
         pc.addStream(stream);
         return pc.createOffer({ offerToReceiveAudio: 0, offerToReceiveVideo: 0 });
     }).then((desc) => {
