@@ -1,3 +1,6 @@
+const SegfaultHandler = require('segfault-handler');
+SegfaultHandler.registerHandler();
+
 const addon = require('./lib/addon.node');
 
 class Logger {
