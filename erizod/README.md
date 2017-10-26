@@ -17,17 +17,13 @@ LD_LIBRARY_PATH=lib ./bin/node demoserver.js
 
 ## demo 连通性测试
 
-```
-./bin/node demoserver.js
-```
+执行 demoserver.js
 
 访问 http://localhost:8081/demo.html
 
 ## demo1 单人发布订阅测试
 
-```
-./bin/node demoserver1.js
-```
+执行 demoserver1.js
 
 访问 http://localhost:8081/demo1.html
 
