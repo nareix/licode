@@ -7,8 +7,8 @@ FILENAME=`basename $SCRIPT`
 PATHNAME=`dirname $SCRIPT`
 ROOT=$PATHNAME/..
 CURRENT_DIR=`pwd`
-NVM_CHECK="$ROOT"/scripts/checkNvm.sh
 
+export PATH=../build/libdeps/nvm/versions/node/v6.9.2/bin/:$PATH
 export ERIZO_HOME=$ROOT/erizo
 
 if hash node-waf 2>/dev/null; then
