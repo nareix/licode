@@ -86,10 +86,9 @@ var
     WARN_BAD_CONNECTION = 502;
 
 
-var muxer =null;
-exports.publish = () => {
+var muxer = null;
+exports.publish = (pcid) => {
     // let pcid = 'newconn' + Date.now();
-    let pcid = '1234';
     let conn = {};
     let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
         stunserver,
@@ -111,7 +110,7 @@ exports.publish = () => {
     muxer.setPublisher(pc);
 
     let onevent = (e, msg) => {
-        log.info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', e);
+        log.info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', e, pcid);
         switch (e) {
             case CONN_CANDIDATE:
                 let j = JSON.parse(msg);
@@ -141,9 +140,8 @@ exports.publish = () => {
 };
 
 
-exports.subscribe = () => {
+exports.subscribe = (pcid) => {
     // let pcid = 'newconn' + Date.now();
-    let pcid = '5678';
     let conn = {};
     let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
         stunserver,
@@ -160,10 +158,10 @@ exports.subscribe = () => {
         '' //networkinterface
     );
 
-    muxer.addSubscriber(pc, "1234");
+    muxer.addSubscriber(pc, pcid);
 
     let onevent = (e, msg) => {
-        log.info('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', e);
+        log.info('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', e, pcid);
         switch (e) {
             case CONN_CANDIDATE:
                 let j = JSON.parse(msg);

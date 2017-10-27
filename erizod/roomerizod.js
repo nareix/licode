@@ -86,10 +86,8 @@ var
     WARN_BAD_CONNECTION = 502;
 
 
-var muxer =null;
-exports.publish = () => {
-    // let pcid = 'newconn' + Date.now();
-    let pcid = '1234';
+var muxer = null;
+exports.publish = (pcid) => {
     let conn = {};
     let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
         stunserver,
@@ -105,10 +103,12 @@ exports.publish = () => {
         '', //turnpass,
         '' //networkinterface
     );
+    conn.pcid = pc;
     muxer = new addon.OneToManyProcessor();
     pc.setAudioReceiver(muxer);
     pc.setVideoReceiver(muxer);
     muxer.setPublisher(pc);
+    conn.muxer = muxer;
 
     let onevent = (e, msg) => {
         log.info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', e);
@@ -141,9 +141,7 @@ exports.publish = () => {
 };
 
 
-exports.subscribe = () => {
-    // let pcid = 'newconn' + Date.now();
-    let pcid = '5678';
+exports.subscribe = (pcid, muxer) => {
     let conn = {};
     let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
         stunserver,
@@ -159,8 +157,8 @@ exports.subscribe = () => {
         '', //turnpass,
         '' //networkinterface
     );
-
-    muxer.addSubscriber(pc, "1234");
+    conn.pcid = pcid;
+    muxer.addSubscriber(pc, pcid);
 
     let onevent = (e, msg) => {
         log.info('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', e);
