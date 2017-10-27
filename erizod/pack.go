@@ -261,11 +261,11 @@ func runPack() error {
 
 func runUpload() error {
 	var c *exec.Cmd
-	uploadname := fmt.Sprintf("erizod-libdeps-%s.tar", runtime.GOOS)
+	uploadname := fmt.Sprintf("erizod-libdeps-%s.tar.bz2", runtime.GOOS)
 	tarname := fmt.Sprintf("/tmp/%d", time.Now().UnixNano())
 	defer os.Remove(tarname)
 
-	c = exec.Command("tar", "cf", tarname, "bin", "lib", "node_modules")
+	c = exec.Command("tar", "cjf", tarname, "bin", "lib", "node_modules")
 	if err := c.Run(); err != nil {
 		return err
 	}
