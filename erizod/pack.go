@@ -260,7 +260,7 @@ func runUpload() error {
 	tarname := fmt.Sprintf("/tmp/%d", time.Now().UnixNano())
 	defer os.Remove(tarname)
 
-	c = exec.Command("tar", "xv", tarname, "bin", "lib", "node_modules")
+	c = exec.Command("tar", "cf", tarname, "bin", "lib", "node_modules")
 	if err := c.Run(); err != nil {
 		return err
 	}
