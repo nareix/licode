@@ -26,12 +26,12 @@ git clone git@github.com:nareix/licode.git
 cd licode/erizod
 
 # OS X
-curl http://woyao.qiniucdn.com/erizod-libdeps-darwin.tar | tar xf -
+curl http://woyao.qiniucdn.com/erizod-libdeps-darwin.tar?r=`date +%s` | tar xf -
 ./bin/node demoserver.js
 
 # Linux
-curl http://woyao.qiniucdn.com/erizod-libdeps-linux.tar | tar xf -
-LD_LIBRARY_PATH=lib ./bin/node demoserver.js
+curl http://woyao.qiniucdn.com/erizod-libdeps-linux.tarr=`date +%s` | tar xf -
+LD_LIBRARY_PATH=lib ./lib/ld-linux.so ./bin/node demoserver.js
 ```
 
 ## demo 连通性测试

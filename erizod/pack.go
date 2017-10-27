@@ -15,6 +15,7 @@ import (
 var nodebinpath = "../build/libdeps/nvm/versions/node/v6.9.2/bin"
 var licodenodepath = path.Join(nodebinpath, "node")
 var addonnodepath = "../erizoAPI/build/Release/addon.node"
+var ldlinuxpath = "/lib64/ld-linux-x86-64.so.2"
 
 func otoolL(lib string) (paths []string, err error) {
 	c := exec.Command("otool", "-L", lib)
@@ -179,7 +180,7 @@ func ldd(lib string) (paths []Entry, err error) {
 		if name == "linux-vdso.so.1" {
 			continue
 		}
-		if name == "/lib64/ld-linux-x86-64.so.2" {
+		if name == ldlinuxpath {
 			continue
 		}
 		var realpath string
@@ -234,6 +235,10 @@ func packlibLinux() error {
 			return err
 		}
 		fmt.Println(e)
+	}
+	c := exec.Command("cp", "-f", ldlinuxpath, "lib/ld-linux.so")
+	if err := c.Run(); err != nil {
+		return err
 	}
 	return nil
 }
