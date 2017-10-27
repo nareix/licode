@@ -3,10 +3,8 @@
 var ws = null;
 var localStream = null;
 var localPC = null;
-var remoteStream = null;
-var remotePC = null;
+var remotePcs = {};
 var remoteStreams = {};
-var remotePCs = {};
 
 function connect(url) {
     ws = new WebSocket(url);
@@ -32,18 +30,20 @@ function connect(url) {
         }
 
         if (data.option == 'subscribe' && data.type == 'sdp') {
-            remotePC.setRemoteDescription({
+            remotePcs[data.id].setRemoteDescription({
                 type: 'answer',
                 sdp: data.sdp
             });
         }
 
         if (data.option == 'subscribe' && data.type == 'candidate') {
-            remotePC.addIceCandidate(data.candidate);
+            remotePcs[data.id].addIceCandidate(data.candidate);
         }
 
         if (data.option == 'publishok') {
-            subscribe();
+            for (var i = 0; i < data.ids.length; i++) {
+                subscribe(data.ids[i]);
+            }
         }
 
         if (data.option == 'subscribeok') {}
@@ -82,8 +82,8 @@ function unsubscribe() {
 
 }
 
-function subscribe() {
-    createRemotePC();
+function subscribe(from) {
+    createRemotePC(from);
 }
 
 function unpublish() {
@@ -91,6 +91,8 @@ function unpublish() {
 }
 
 function createLocalPC(stream) {
+    var date = new Date();
+    var id = String(date.getTime());
     var servers = {
         iceServers: [{
             "urls": "stun:webrtc.qiniuapi.com:3478"
@@ -106,6 +108,7 @@ function createLocalPC(stream) {
                 candidate: event.candidate,
                 type: 'candidate',
                 option: 'publish',
+                id: id,
             });
         }
     };
@@ -129,7 +132,8 @@ function createLocalPC(stream) {
             ws.sendmsg({
                 sdp: desc.sdp,
                 type: 'sdp',
-                option: 'publish'
+                option: 'publish',
+                id: id,
             });
         },
         function (error) {
@@ -138,29 +142,40 @@ function createLocalPC(stream) {
     );
 }
 
-function createRemotePC() {
+function createRemotePC(from) {
+    var date = new Date();
+    var id = String(date.getTime());
     var servers = {
         iceServers: [{
             "urls": "stun:webrtc.qiniuapi.com:3478"
         }],
     };
     var pc = new RTCPeerConnection(servers);
+    remotePcs[id] = pc;
     console.log('created remote peer connection object');
 
-    remotePC = pc;
     pc.onicecandidate = function (event) {
         if (event.candidate) {
             ws.sendmsg({
                 candidate: event.candidate,
                 type: 'candidate',
-                option: 'subscribe'
+                option: 'subscribe',
+                id: id,
             });
         }
     };
 
     pc.ontrack = function (e) {
-        document.getElementById('remoteVideo').srcObject = e.streams[0];
-        remoteStream = e.streams[0]
+        if (!remoteStreams[id]) {
+            remoteStreams[id] = e.streams[0];
+            for (var i = 0; i < 5; i++) {
+                if (!document.getElementById('remoteVideo' + (i + 1)).srcObject) {
+                    document.getElementById('remoteVideo' + (i + 1)).srcObject = e.streams[0];
+                    break;
+                }
+            }
+        }
+
         console.log('received remote stream');
     }
 
@@ -173,7 +188,9 @@ function createRemotePC() {
             ws.sendmsg({
                 sdp: desc.sdp,
                 type: 'sdp',
-                option: 'subscribe'
+                option: 'subscribe',
+                id: id,
+                from: from,
             });
         },
         function (error) {
@@ -182,4 +199,4 @@ function createRemotePC() {
     );
 }
 
-connect('ws://localhost:8082');
+connect('ws://localhost:8081');

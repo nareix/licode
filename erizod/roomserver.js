@@ -13,8 +13,8 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({
   server
 });
-let conn = null;
-let conn1 = null;
+let conns = {};
+let muxers = {};
 
 wss.on('connection', function connection(ws, req) {
   let sendmessage = (j) => {
@@ -23,8 +23,10 @@ wss.on('connection', function connection(ws, req) {
   let onmessage = (data) => {
 
     if (data.option == 'publish' && data.type == 'sdp') {
-      if (conn == null) {
-        conn = erizod.publish();
+      if (conns[data.id] == null) {
+        var conn = erizod.publish(data.id);
+        conns[data.id] = conn;
+        muxers[data.id] = conn.muxer;
         conn.sendCandidate = (e) => {
           sendmessage({
             option: 'publish',
@@ -40,8 +42,13 @@ wss.on('connection', function connection(ws, req) {
           });
         };
         conn.sendPublishOK = () => {
+          var ids = [];
+          for (var id in muxers) {
+            ids.push(id);
+          }
           sendmessage({
-            option: 'publishok'
+            option: 'publishok',
+            ids: ids,
           });
         };
         conn.setSdp(data.sdp);
@@ -49,46 +56,48 @@ wss.on('connection', function connection(ws, req) {
     }
 
     if (data.option == 'publish' && data.type == 'candidate') {
-      conn.addCandidate(data.candidate);
+      conns[data.id].addCandidate(data.candidate);
     }
 
     if (data.option == 'subscribe' && data.type == 'sdp') {
-      if (conn1 == null) {
-        conn1 = erizod.subscribe();
-        conn1.sendCandidate = (e) => {
+      if (conns[data.id] == null) {
+        conn = erizod.subscribe(data.id, muxers[data.from]);
+        conns[data.id] = conn;
+        conn.sendCandidate = (e) => {
           sendmessage({
             option: 'subscribe',
             type: 'candidate',
-            candidate: e
+            candidate: e,
+            id: data.id,
           });
         };
-        conn1.sendSDP = (e) => {
+        conn.sendSDP = (e) => {
           sendmessage({
             option: 'subscribe',
             type: 'sdp',
-            sdp: e
+            sdp: e,
+            id: data.id,
           });
         };
-        conn1.sendSubscribeOK = () => {
+        conn.sendSubscribeOK = () => {
           sendmessage({
             option: 'subscribeok'
           });
         };
-        conn1.setSdp(data.sdp);
+        conn.setSdp(data.sdp);
       }
     }
-
     if (data.option == 'subscribe' && data.type == 'candidate') {
-      conn1.addCandidate(data.candidate);
+      conns[data.id].addCandidate(data.candidate);
     }
   };
   ws.on('message', function (message) {
-    let j = JSON.parse(message);
+    let data = JSON.parse(message);
     log.info('received', message);
-    onmessage(j);
+    onmessage(data);
   });
 });
 
-server.listen(8082, function listening() {
+server.listen(8081, function listening() {
   log.info('listening', server.address().port);
 });

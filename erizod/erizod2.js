@@ -88,6 +88,7 @@ var
 
 var muxer = null;
 exports.publish = (pcid) => {
+    // let pcid = 'newconn' + Date.now();
     let conn = {};
     let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
         stunserver,
@@ -103,15 +104,13 @@ exports.publish = (pcid) => {
         '', //turnpass,
         '' //networkinterface
     );
-    conn.pcid = pc;
     muxer = new addon.OneToManyProcessor();
     pc.setAudioReceiver(muxer);
     pc.setVideoReceiver(muxer);
     muxer.setPublisher(pc);
-    conn.muxer = muxer;
 
     let onevent = (e, msg) => {
-        log.info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', e);
+        log.info('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', e, pcid);
         switch (e) {
             case CONN_CANDIDATE:
                 let j = JSON.parse(msg);
@@ -141,7 +140,8 @@ exports.publish = (pcid) => {
 };
 
 
-exports.subscribe = (pcid, muxer) => {
+exports.subscribe = (pcid) => {
+    // let pcid = 'newconn' + Date.now();
     let conn = {};
     let pc = new addon.WebRtcConnection(threadPool, ioThreadPool, pcid,
         stunserver,
@@ -157,11 +157,11 @@ exports.subscribe = (pcid, muxer) => {
         '', //turnpass,
         '' //networkinterface
     );
-    conn.pcid = pcid;
+
     muxer.addSubscriber(pc, pcid);
 
     let onevent = (e, msg) => {
-        log.info('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', e);
+        log.info('yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy', e, pcid);
         switch (e) {
             case CONN_CANDIDATE:
                 let j = JSON.parse(msg);
