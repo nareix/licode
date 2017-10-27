@@ -91,10 +91,10 @@ var main = (conn) => {
                     console.log('oniceconnectionstatechange', e);
                 };
 
-                pc1.ontrack = (e) => {
-                    console.log('ontrack ontrack ontrack', e);
-                    document.getElementById('my_subscribed_video').srcObject = e.streams[0];;
-                };
+                pc1.onaddstream = (e) => {
+                    console.log('onaddstream onaddstream onaddstream', e);
+                    document.getElementById('my_subscribed_video').srcObject = e.stream;
+                }
 
                 break;
         }
@@ -130,8 +130,9 @@ var main = (conn) => {
     }).then((stream) => {
         localstream = stream;
         document.getElementById('my_local_video').srcObject = stream;
-        pc.addTrack(stream.getAudioTracks()[0], stream);
-        pc.addTrack(stream.getVideoTracks()[0], stream);
+        // pc.addTrack(stream.getAudioTracks()[0], stream);
+        // pc.addTrack(stream.getVideoTracks()[0], stream);
+        pc.addStream(stream)
         return pc.createOffer({
             offerToReceiveAudio: 0,
             offerToReceiveVideo: 0

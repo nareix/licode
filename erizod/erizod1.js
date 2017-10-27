@@ -119,7 +119,6 @@ exports.publish = () => {
                 conn.sendCandidate(j);
                 break;
             case CONN_READY:
-                log.info('pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok');
                 conn.sendPublishOK();
                 break
         }
@@ -174,9 +173,7 @@ exports.subscribe = () => {
                 conn.sendCandidate(j);
                 break;
             case CONN_READY:
-                log.info('pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok pc ok');
                 conn.sendSubscribeOK();
-                pc.generatePLIPacket();
                 break
         }
     };
