@@ -86,7 +86,7 @@ var
     WARN_BAD_CONNECTION = 502;
 
 
-var muxer =null;
+var muxer = null;
 exports.publish = () => {
     // let pcid = 'newconn' + Date.now();
     let pcid = '1234';
