@@ -1,17 +1,36 @@
 # erizod
 
-## 环境搭建
+## 编译打包
+
+```bash
+git clone git@github.com:nareix/licode.git
+cd licode
+
+# OS X
+./scripts/installMacDeps.sh
+# Linux
+./scripts/installUbuntuDeps.sh
+
+./scripts/installErizo.sh -e
+./scripts/installErizo.sh -a
+
+cd erizod
+go run pack.go buildnodemodules
+go run pack.go pack
+```
+
+## 直接使用
 
 ```bash
 git clone git@github.com:nareix/licode.git
 cd licode/erizod
 
 # OS X
-curl http://woyao.qiniucdn.com/erizod-bundle-mac.tar | tar xf -
+curl http://woyao.qiniucdn.com/erizod-libdeps-darwin.tar | tar xf -
 ./bin/node demoserver.js
 
 # Linux
-curl http://woyao.qiniucdn.com/erizod-linux64-bundle.tar | tar xf -
+curl http://woyao.qiniucdn.com/erizod-libdeps-linux.tar | tar xf -
 LD_LIBRARY_PATH=lib ./bin/node demoserver.js
 ```
 
