@@ -48,7 +48,7 @@ LD_LIBRARY_PATH=lib ./lib/ld-linux.so ./bin/node demoserver.js
 
 ## demo2 单人发布订阅测试
 
-./bin/node demoserver2.js
+执行 demoserver2.js
 
 访问 http://localhost:8081/demo2.html
 
@@ -56,7 +56,7 @@ LD_LIBRARY_PATH=lib ./lib/ld-linux.so ./bin/node demoserver.js
 
 ## room 多人房间测试
 
-./bin/node roomserver.js
+执行 roomserver.js
 
 访问 http://localhost:8081/room.html
 
