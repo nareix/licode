@@ -46,7 +46,7 @@ LD_LIBRARY_PATH=lib ./lib/ld-linux.so ./bin/node demoserver.js
 
 访问 http://localhost:8081/demo1.html
 
-## demo2 单人发布订阅测试
+## demo2 单人发布订阅测试
 
 ./bin/node demoserver2.js
 
@@ -54,7 +54,7 @@ LD_LIBRARY_PATH=lib ./lib/ld-linux.so ./bin/node demoserver.js
 
 发布流一次，订阅流两次
 
-## room 多人房间测试
+## room 多人房间测试
 
 ./bin/node roomserver.js
 
