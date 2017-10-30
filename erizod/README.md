@@ -60,6 +60,6 @@ LD_LIBRARY_PATH=lib ./lib/ld-linux.so ./bin/node demoserver.js
 
 访问 http://localhost:8081/room.html
 
-进入房间会把自己的流发布到默认房间，然后会订阅房间已经存在的流最多五个(包括自己发布的流)
+进入房间会把自己的流发布到默认房间，然后会订阅房间已经存在的流。最多五个(包括自己发布的流)
 
 暂不支持取消订阅，取消发布以及离开房间
